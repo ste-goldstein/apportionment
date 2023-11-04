@@ -308,6 +308,7 @@ def __divzero_fewerseatsthanparties(votes, seats, parties, tiesallowed, verbose)
 def quota(
     votes,
     seats,
+    limits=None,
     fractions=False,
     parties=string.ascii_letters,
     tiesallowed=True,
@@ -338,6 +339,8 @@ def quota(
         # check if upper quota is violated
         upperquota = votes * (np.sum(representatives) + 1) / np.sum(votes)
         upperquota = np.trunc(np.ceil(upperquota))
+        if limits is not None:
+            upperquota = np.where(upperquota >= limits, limits, upperquota)
         quotas = np.where(representatives >= upperquota, 0, quotas)
         maxquotas = np.nonzero(quotas == quotas.max())[0]
 
